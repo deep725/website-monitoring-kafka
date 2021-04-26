@@ -1,0 +1,43 @@
+{
+  "log_level": "logging.INFO",
+  "monitoring_interval": 10,
+  "url_list": [
+    {
+      "url": "http://192.168.2.34",
+      "txt_to_find": "Additional products"
+    },
+    {
+      "url": "https://stackoverflow.com/",
+      "txt_to_find": "Additional products"
+    },
+    {
+      "url": "http://google.com/cc",
+      "txt_to_find": "Additional products"
+    },
+    {
+      "url": "ftp://yoox.com",
+      "txt_to_find": "Additional products"
+    },
+    {
+      "url": "http://underarmor.com",
+      "txt_to_find": "Additional products"
+    },
+    {
+      "url": "http://undedfrarmor.com",
+      "txt_to_find": "Additional products"
+    }
+  ],
+  "kafka": {
+    "bootstrap_servers": "192.168.1.42:9092",
+    "topic": "monitoring_topic",
+    "consumer_group": "group-1"
+  },
+  "db": {
+    "host": "localhost",
+    "port": 5432,
+    "database": "testdb",
+    "user": "postgres",
+    "password": "1q2w3e4r",
+    "table": "monitor_stats"
+  }
+}
