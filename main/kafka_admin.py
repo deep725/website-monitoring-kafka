@@ -7,11 +7,11 @@ Reference:
     https://github.com/confluentinc/confluent-kafka-python/blob/master/examples/adminapi.py
 """
 
+
 class KafkaAdmin:
     def __init__(self) -> None:
         self.logger = logging.getLogger(self.__class__.__name__)
         self.__client = AdminClient({'bootstrap.servers': '192.168.1.42:9092'})
-
 
     def create_partitions(self, num_partitions, topic_name):
         # Create Admin client

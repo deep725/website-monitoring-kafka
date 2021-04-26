@@ -2,9 +2,9 @@ import aiohttp
 import asyncio
 import logging
 import re
-import time
 
 from kafka_publisher import KafkaPublisher
+
 
 class WebMonitorApp:
     def __init__(self, config, loop):
@@ -78,10 +78,10 @@ class WebMonitorApp:
             })
         
     def find_txt_in_content(self, web_content, text_to_find):
-      txt_matches = re.findall(
-          text_to_find, web_content) if web_content is not None else ''
+        txt_matches = re.findall(
+            text_to_find, web_content) if web_content is not None else ''
 
-      if len(txt_matches) == 0:
-          return False
-      else:
-          return True
+        if len(txt_matches) == 0:
+            return False
+        else:
+            return True

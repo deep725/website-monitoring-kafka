@@ -1,35 +1,11 @@
-from confluent_kafka import Producer
-from urllib.request import urlopen
-from urllib.error import HTTPError, URLError
-from socket import timeout
 import asyncio
-
 import logging
-import re
-
-import sys
-import time
 import multiprocessing
 
 from config_read import ConfigReader
-from kafka_admin import KafkaAdmin
 from web_monitor_app import WebMonitorApp
 from stats_consumer_app import StatsConsumerApp
 from pgsql_sink import PgSQLSink
-
-
-# -------------------------------
-
-
-def timeit(func):
-    async def inner(url):
-        print(f"I got time-{url}")
-        start = loop.time()
-        await func(url)
-        end = round((loop.time() - start) * 1000, 2)
-        print(f"I got time-{url}:{end}")
-
-    return inner
 
 
 # all_groups = asyncio.gather(*tasks, return_exceptions=True)
@@ -82,7 +58,6 @@ def stats_consumer_proc(config):
             pass
 
     db_sink.clean_up()
-    
 
 
 def run_procs():
@@ -100,16 +75,15 @@ def run_procs():
     except KeyboardInterrupt:
         pass
 
+
 if __name__ == "__main__":
     config = ConfigReader('config/config.json')
     # config = ConfigReader('config/config.local.json')
 
-
-
     # Create as much topic as urls list so that each url can go into its own list
     # ToDo: SDSINGH : Remove it
+    # from kafka_admin import KafkaAdmin
     # kafka_admin = KafkaAdmin()
     # kafka_admin.create_partitions( len(config.url_list), config.kafka_topic)
 
     run_procs()
-

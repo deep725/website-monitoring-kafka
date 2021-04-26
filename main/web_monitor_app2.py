@@ -11,6 +11,8 @@ from kafka_publisher import KafkaPublisher
 """
 This class uses HttpClientSession approach
 """
+
+
 class WebMonitorApp2:
     def __init__(self, config, loop):
         # KafkaPublisher.__init__(self, config.kafka_bootstrap_servers, config.kafka_topic)
@@ -28,7 +30,6 @@ class WebMonitorApp2:
 
     async def fetch_urls(self, url_list):
         async with aiohttp.ClientSession(loop=self.__loop) as session:
-        # async with aiohttp.ClientSession() as session:
             while True:
                 tasks = []
                 for url in url_list:
@@ -40,17 +41,14 @@ class WebMonitorApp2:
     async def async_client_get(self, session, url_data):
         start = time.time()
         try:
-          async with session.get(url_data['url'], raise_for_status=True) as resp:
-            web_content = await resp.text()
-
+            async with session.get(url_data['url'], raise_for_status=True) as resp:
+                web_content = await resp.text()
 
         except aiohttp.client_exceptions.ClientResponseError as err:
             err_status = err.status
             print(f"Cannot find {url_data['url']}: {err_status}")
-        
-        time_elapsed = int((time.time() - start) * 1000)
-        print(f'...{url[0:20]}:{end}')
 
+        time_elapsed = int((time.time() - start) * 1000)
 
         self.__publisher.send({
             'url': url_data['url'],
@@ -60,10 +58,10 @@ class WebMonitorApp2:
         })
         
     def find_txt_in_content(self, web_content, text_to_find):
-      txt_matches = re.findall(
-          text_to_find, web_content) if web_content is not None else ''
+        txt_matches = re.findall(
+            text_to_find, web_content) if web_content is not None else ''
 
-      if len(txt_matches) == 0:
-          return False
-      else:
-          return True
+        if len(txt_matches) == 0:
+            return False
+        else:
+            return True
