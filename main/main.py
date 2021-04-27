@@ -2,11 +2,10 @@ import asyncio
 import logging
 import multiprocessing
 
-from config_read import ConfigReader
-from web_monitor_app import WebMonitorApp
-from stats_consumer_app import StatsConsumerApp
-from pgsql_sink import PgSQLSink
-
+from publisher import WebMonitorApp
+from consumer import StatsConsumerApp
+from consumer import PgSQLSink
+from utils import ConfigReader
 
 # all_groups = asyncio.gather(*tasks, return_exceptions=True)
 # results = loop.run_until_complete(all_groups)
@@ -80,8 +79,8 @@ if __name__ == "__main__":
     config = ConfigReader('config/config.json')
     # config = ConfigReader('config/config.local.json')
 
-    # Create as much topic as urls list so that each url can go into its own list
     # ToDo: SDSINGH : Remove it
+    # Create as much topic as urls list so that each url can go into its own list
     # from kafka_admin import KafkaAdmin
     # kafka_admin = KafkaAdmin()
     # kafka_admin.create_partitions( len(config.url_list), config.kafka_topic)

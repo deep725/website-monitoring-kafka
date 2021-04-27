@@ -103,3 +103,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+#project-specific
+web_monitor_app2.py
+kafka_admin.py

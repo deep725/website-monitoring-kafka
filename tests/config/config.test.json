@@ -28,7 +28,7 @@
       }
     ],
     "kafka": {
-      "bootstrap_servers": "localhost:27457",
+      "bootstrap_servers": "localhost",
       "topic": "monitoring_topic",
       "consumer_group": "group-1",
       "sec_prot": "None",

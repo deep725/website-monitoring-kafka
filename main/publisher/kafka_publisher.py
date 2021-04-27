@@ -7,19 +7,28 @@ from os import sys
 
 
 class KafkaPublisher:
-    def __init__(self, config):
+    def __init__(self, config = None):
         self.logger = logging.getLogger(self.__class__.__name__)
 
-        conf = {
+        conf = self.get_broker_conf(config)
+        self.__producer = Producer(**conf)
+        self.kafka_topic = config.kafka_topic
+
+    def get_broker_conf(self, config):
+        conf_broker = {
             'bootstrap.servers': config.kafka_bootstrap_servers,
+        }
+
+        conf_sec = {
             'security.protocol': config.kafka_sec_prot,
             'ssl.ca.location': config.kafka_cafile,
             'ssl.certificate.location': config.kafka_certfile,
             'ssl.key.location': config.kafka_keyfile
         }
 
-        self.__producer = Producer(**conf)
-        self.kafka_topic = config.kafka_topic
+        if config.kafka_sec_prot is not None:
+            return ( {**conf_broker, **conf_sec})
+
 
     def stop(self):
         sys.stderr.write('%% Waiting for %d deliveries\n' %

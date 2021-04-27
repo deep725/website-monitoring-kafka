@@ -28,10 +28,9 @@
       }
     ],
     "kafka": {
-      "bootstrap_servers": "localhost:27457",
+      "bootstrap_servers": "kafka-356aa597-sdsingh-8ace.aivencloud.com:27457",
       "topic": "monitoring_topic",
       "consumer_group": "group-1",
-      "sec_prot": "None",
       "cafile": "",
       "certfile": "",
       "keyfile": ""

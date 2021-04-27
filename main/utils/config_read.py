@@ -1,5 +1,9 @@
 import logging
 import json
+import enum
+
+from os import sys
+from _pytest.compat import REGEX_TYPE
 
 log_level_info = {'logging.DEBUG': logging.DEBUG,
                   'logging.INFO': logging.INFO,
@@ -7,6 +11,11 @@ log_level_info = {'logging.DEBUG': logging.DEBUG,
                   'logging.ERROR': logging.ERROR,
                   }
 
+class ReturnStatus(enum.Enum):
+   SUCCESS = 0
+   DECODE_FAIL = 1
+   FILE_NOT_FOUND = 2
+   FAILURE = 3
 
 class ConfigReader:
     def __init__(self, file):
@@ -14,10 +23,14 @@ class ConfigReader:
         self.__loglevel = None
         self.__kafka_topic = None
         self.__bootstrap_servers = None
+        self.__file_read_status = self.read_file(file)
+        
 
-        self.read_file(file)
+    def file_read_status(self):
+        return self.__file_read_status
 
     def read_file(self, file):
+        ret_val = ReturnStatus.FAILURE
         self.logger = logging.getLogger(self.__class__.__name__)
         try:
             with open(file, "r") as jsonfile:
@@ -39,20 +52,21 @@ class ConfigReader:
             self.__user = self.__config["db"]["user"]
             self.__password = self.__config["db"]["password"]
             self.__table = self.__config["db"]["table"]
+            ret_val = ReturnStatus.SUCCESS
 
         except json.decoder.JSONDecodeError as error:
-            print('Exception Decoding JSON has failed: {}'.format(error))
-        except IOError as error:
-            print("Exception I/O error: {}".format(error))
-        except Exception as error:
-            print("Exception thrown: {}".format(error))
+            sys.stderr.write('Exception Decoding JSON has failed: {}'.format(error))
+            ret_val = ReturnStatus.DECODE_FAIL
 
-    def log_config(self):
-        self.logger.debug(f"Debug Level: {logging.getLevelName(self.__loglevel)}")
-        self.logger.debug(f"Monitoring interval: {self.__monitoring_interval}")
-        self.logger.debug(f"Kafka Topic: {self.__kafka_topic}")
-        self.logger.debug(f"Kafka bootstrap.servers: {self.__bootstrap_servers}")
-        self.logger.debug(f"Kafka consumer group: {self.__kafka_consumer_group}")
+        except FileNotFoundError as error:
+            sys.stderr.write("Exception FileNotFoundError error: {}".format(error))
+            ret_val = ReturnStatus.FILE_NOT_FOUND
+
+        except Exception as error:
+            sys.stderr.write("Exception thrown: {}".format(error))
+            ret_val = ReturnStatus.FAILURE
+
+        return ret_val
 
     @property
     def url_list(self):
@@ -68,8 +82,8 @@ class ConfigReader:
 
     @log_level.setter
     def log_level(self, value):
-        if value < -273.15:
-            raise ValueError("Temperature below -273 is not possible")
+        if value not in log_level_info.values():
+            raise ValueError("Invalid log level specified")
         self.__loglevel = value
 
     @property

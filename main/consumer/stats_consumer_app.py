@@ -1,6 +1,6 @@
 import logging
 
-from kafka_consumer import KafkaConsumer
+from .kafka_consumer import KafkaConsumer
 
 
 class StatsConsumerApp:

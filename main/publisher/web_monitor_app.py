@@ -3,16 +3,18 @@ import asyncio
 import logging
 import re
 
-from kafka_publisher import KafkaPublisher
-
+from .kafka_publisher import KafkaPublisher
 
 class WebMonitorApp:
     def __init__(self, config, loop):
-        # KafkaPublisher.__init__(self, config.kafka_bootstrap_servers, config.kafka_topic)
         self.__loop = loop
         self.__config = config
+        print (KafkaPublisher)
         self.__publisher = KafkaPublisher(config)
         self.logger = logging.getLogger(self.__class__.__name__)
+
+    def get_publisher(self):
+        return self.__publisher
 
     def get_url_list(self):
         return self.__config.url_list
