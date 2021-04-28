@@ -26,10 +26,12 @@ class TestConfigReader:
         cfg_reader = ConfigReader('tests/config/config.missing.entry.json')
         out, err = capsys.readouterr()
         assert "Exception thrown" in err
-        assert ReturnStatus.FAILURE == cfg_reader.file_read_status()
+
+    def test_valid_file_read(self, cfg_read):
+        assert ReturnStatus.SUCCESS == cfg_read.file_read_status()
 
     def test_log_level(self, cfg_read):
-        assert cfg_read.monitoring_interval == 10
+        assert cfg_read.log_level == 20
 
     def test_invalid_log_set(self, cfg_read):
         with pytest.raises(ValueError):

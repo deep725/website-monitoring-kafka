@@ -1,32 +1,73 @@
 import pytest
-from unittest import mock
-from unittest.mock import Mock
 from main.publisher.web_monitor_app import WebMonitorApp
-from unittest.mock import patch
-import main
 from main.publisher.kafka_publisher import KafkaPublisher
-from confluent_kafka import Producer
+import asyncio, aiohttp
+from aioresponses import aioresponses
 
-# @mock.patch('main.publisher.kafka_publisher.KafkaPublisher', autospec=True)
-def test_web_monitor_app(cfg_read, mocker):
+@pytest.fixture()
+def response_mock():
+    with aioresponses() as mock:
+        yield mock
+
+@pytest.fixture
+def web_monitor_app(cfg_read, mocker):
     loop = mocker.MagicMock()
-    pr = mocker.MagicMock()
-    pr.return_value = 'foo'
-    # conn = mocker.patch('main.publisher.kafka_publisher.KafkaPublisher')
-    # conn.return_value = 1
+    loop.time.return_value = 4
     
-    #mocker.patch.object(main.publisher.kafka_publisher, 'KafkaPublisher', lambda:2)
-    #mocker.patch.object(Producer, '', lambda:2)
-   # kafkaPublisher = Mock();
-   # kafkaPublisher.return_value = 1
-  #  KafkaPublisher.return_value = 'foo'
-    #with patch('Producer'):
-    app = WebMonitorApp(cfg_read, loop)
-    ret = app.get_publisher()
-    breakpoint()      
-    print(ret)
+    producer = mocker.MagicMock()
+    mocker.patch.object(KafkaPublisher, "get_producer", lambda x, y: producer)
 
-# class TestWebMonitorApp:
-#     def test_app(self, web_monitor_app):
-#         app = web_monitor_app
-        # assert app.__config.get_log_level == 10
+    return WebMonitorApp(cfg_read, loop)
+
+url_list = {
+        "url": "http://www.google.com",
+        "txt_to_find": "Additional products"
+    }
+
+class TestWebMonitorApp:
+    @pytest.mark.asyncio 
+    async def test_async_open_505(self, web_monitor_app, response_mock):
+        response_mock.get(url_list['url'], status=500)
+        result = await web_monitor_app.async_open(url_list)
+        assert '500' == result['err_status']
+
+    @pytest.mark.asyncio 
+    async def test_async_open_Timeout(self, web_monitor_app, response_mock):
+        response_mock.get(url_list['url'], exception=asyncio.TimeoutError)
+        result = await web_monitor_app.async_open(url_list)
+        assert 'Connection Error' == result['err_status']
+
+    @pytest.mark.asyncio 
+    async def test_async_open_connecting_error(self, web_monitor_app, response_mock):
+        response_mock.get(url_list['url'], exception=aiohttp.ClientConnectorError(None, OSError()))
+        result = await web_monitor_app.async_open(url_list)
+        assert 'Connection Error' == result['err_status']
+  
+    @pytest.mark.asyncio 
+    async def test_async_open_Exception(self, web_monitor_app, response_mock):
+        response_mock.get(url_list['url'], exception=aiohttp.InvalidURL(''))
+        result = await web_monitor_app.async_open(url_list)
+        assert 'Unknown' == result['err_status']
+  
+    @pytest.mark.asyncio 
+    async def test_async_open_text_found(self, web_monitor_app, response_mock):
+        response_mock.get(url_list['url'], status=200, body='Text is Additional products')
+        result = await web_monitor_app.async_open(url_list)
+        assert '-' == result['err_status']
+        assert True == result['text_found']
+
+    @pytest.mark.asyncio 
+    async def test_text_not_found(self, web_monitor_app, response_mock):
+        response_mock.get(url_list['url'], status=200, body='Text is blank')
+        result = await web_monitor_app.async_open(url_list)
+        assert '-' == result['err_status']
+        assert False == result['text_found']
+
+    @pytest.mark.asyncio 
+    async def test_fetch_urls(self, web_monitor_app, mocker, response_mock):
+        mocker.patch.object(WebMonitorApp, 'get_url_list', lambda x: [url_list])
+        response_mock.get(url_list['url'], status=200, body='Text is blank')
+        result = await web_monitor_app.fetch_urls([url_list])
+        web_monitor_app.stop()
+        assert False == result[0]['text_found']
+

@@ -1,6 +1,6 @@
 {
     "log_level": "logging.INFO",
-    "monitoring_interval": 10,
+    "monitoring_interval": 12,
     "url_list": [
       {
         "url": "http://192.168.2.34",
@@ -31,13 +31,13 @@
       "bootstrap_servers": "localhost",
       "topic": "monitoring_topic",
       "consumer_group": "group-1",
-      "sec_prot": "None",
+      "sec_prot": "Nonse",
       "cafile": "",
       "certfile": "",
       "keyfile": ""
     },
     "db": {
-      "host": "pg-3e2e79e8-sdsingh-8ace.aivencloud.com",
+      "host": "localhost",
       "port": 27455,
       "database": "defaultdb",
       "user": "avnadmin",

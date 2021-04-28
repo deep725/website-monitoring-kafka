@@ -25,7 +25,11 @@ class PgSQLSink:
             self.logger.debug("Opened database successfully")
 
         except psycopg2.OperationalError as err:
+            breakpoint()
             self.logger.error(f'{err}')
+
+    def connection(self):
+        return self.conn
 
     def create_table(self):
         """ create tables in the PostgreSQL database"""
@@ -40,7 +44,6 @@ class PgSQLSink:
         """
 
         self.cursor.execute(sql_str)
-        # self.conn.commit()
 
     async def insert(self, data):
         try:
@@ -56,7 +59,8 @@ class PgSQLSink:
             self.logger.debug("Record inserted successfully into mobile table")
 
         except (Exception, psycopg2.Error) as error:
-            print(f"Failed to insert record into {self.table} table: {error}")
+            breakpoint()
+            self.logger.error(f"Failed to insert record into {self.table} table: {error}")
 
     def clean_up(self):
         if self.cursor:
