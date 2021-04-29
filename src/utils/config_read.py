@@ -3,7 +3,6 @@ import json
 import enum
 
 from os import sys
-from _pytest.compat import REGEX_TYPE
 
 log_level_info = {'logging.DEBUG': logging.DEBUG,
                   'logging.INFO': logging.INFO,
@@ -11,11 +10,13 @@ log_level_info = {'logging.DEBUG': logging.DEBUG,
                   'logging.ERROR': logging.ERROR,
                   }
 
+
 class ReturnStatus(enum.Enum):
-   SUCCESS = 0
-   DECODE_FAIL = 1
-   FILE_NOT_FOUND = 2
-   FAILURE = 3
+    SUCCESS = 0
+    DECODE_FAIL = 1
+    FILE_NOT_FOUND = 2
+    FAILURE = 3
+
 
 class ConfigReader:
     def __init__(self, file):
@@ -29,18 +30,17 @@ class ConfigReader:
         num_legs : int, optional
             The number of legs the animal (default is 4)
         """
-        
+
         self.__config = {}
         self.__loglevel = None
         self.__kafka_topic = None
         self.__bootstrap_servers = None
         self.__file_read_status = self.read_file(file)
-        
 
     def file_read_status(self):
         return self.__file_read_status
 
-    def read_file(self, file):      
+    def read_file(self, file):
         ret_val = ReturnStatus.FAILURE
         self.logger = logging.getLogger(self.__class__.__name__)
         try:
@@ -66,11 +66,13 @@ class ConfigReader:
             ret_val = ReturnStatus.SUCCESS
 
         except json.decoder.JSONDecodeError as error:
-            sys.stderr.write('Exception Decoding JSON has failed: {}'.format(error))
+            sys.stderr.write(
+                'Exception Decoding JSON has failed: {}'.format(error))
             ret_val = ReturnStatus.DECODE_FAIL
 
         except FileNotFoundError as error:
-            sys.stderr.write("Exception FileNotFoundError error: {}".format(error))
+            sys.stderr.write(
+                "Exception FileNotFoundError error: {}".format(error))
             ret_val = ReturnStatus.FILE_NOT_FOUND
 
         except Exception as error:

@@ -1,11 +1,10 @@
+from .consumer import StatsConsumerApp, PgSQLSink
+from .publisher import WebMonitorApp
 import asyncio
 import logging
 import multiprocessing
 print("In module products __package__, __name__ ==", __package__, __name__)
 
-from .publisher import WebMonitorApp
-from .consumer import StatsConsumerApp, PgSQLSink
-from .utils import ConfigReader
 
 class Runner:
     """
@@ -35,6 +34,7 @@ class Runner:
 
     run_procs(self, procs, config):
         Spawn the above processes in multiprocess manner
+
     """
 
     def web_monitor_proc(self, config):
@@ -46,7 +46,6 @@ class Runner:
                 loop.run_until_complete(app.run())
             except KeyboardInterrupt:
                 pass
-
 
     def stats_consumer_proc(self, config):
         loop = asyncio.get_event_loop()
@@ -62,7 +61,6 @@ class Runner:
 
         db_sink.clean_up()
 
-
     def run_procs(self, procs, config):
         """Spawn the monitoring and consumer processes.
 
@@ -76,8 +74,9 @@ class Runner:
 
         config : ConfigReader
             information about various components such as kafka, DB, etc
+
         """
-        
+
         try:
             procs_list = []
             for proc in procs:
@@ -89,7 +88,6 @@ class Runner:
                 proc.join()
         except KeyboardInterrupt:
             pass
-
 
 
 class GracefulExit:
@@ -111,4 +109,3 @@ class GracefulExit:
         self.__loop.stop()
 
         print(f'{self.__proc_name} finished')
-

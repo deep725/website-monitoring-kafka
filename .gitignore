@@ -66,6 +66,7 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+doxygen/
 
 # PyBuilder
 target/
@@ -107,3 +108,5 @@ venv.bak/
 #project-specific
 web_monitor_app2.py
 kafka_admin.py
+gen_doc.py
+.vscode

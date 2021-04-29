@@ -40,7 +40,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            flake8 --exclude=venv* --statistics  --ignore E501,E265,W293,W291
+            flake8 --exclude=venv* --statistics  --ignore E501,E265,W293,W291 --per-file-ignores="__init__.py:F401"
             circleci tests glob "tests/**/*.py" | circleci tests split > /tmp/tests-to-run
             pytest -v --cov-report term-missing --cov-report html:test-artifacts/cov_html --cov-report xml:test-reports/cov.xml $(cat /tmp/tests-to-run)
       - store_test_results:

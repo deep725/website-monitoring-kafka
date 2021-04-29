@@ -30,11 +30,11 @@ class KafkaConsumer:
             }
             conf_broker = {**conf_broker, **conf_sec}
 
-            self.__consumer  = Consumer(**conf_broker) 
+            self.__consumer = Consumer(**conf_broker)
             self.__consumer .subscribe([self.kafka_topic])
 
     def get_consumer(self):
-        return self.__consumer 
+        return self.__consumer
 
     def stop(self):
         self.logger.debug('Stoping Consumer...')
@@ -56,7 +56,6 @@ class KafkaConsumer:
         if msg is None:
             return None
         if msg.error():
-            val = msg.error()
             self.logger.info(f'Consumer error: {msg.error()}')
             return None
 
@@ -64,6 +63,3 @@ class KafkaConsumer:
         self.logger.info(f'Received message: {data}')
         await self.__db_sink.insert(data)
         return data
-
-
-

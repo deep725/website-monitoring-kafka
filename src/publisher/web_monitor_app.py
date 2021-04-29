@@ -5,6 +5,7 @@ import re
 
 from .kafka_publisher import KafkaPublisher
 
+
 class WebMonitorApp:
     def __init__(self, config, loop):
         self.__loop = loop
@@ -22,8 +23,8 @@ class WebMonitorApp:
 
     async def run(self):
         while True:
-          await self.fetch_urls(self.get_url_list())
-          await asyncio.sleep(self.__config.monitoring_interval)
+            await self.fetch_urls(self.get_url_list())
+            await asyncio.sleep(self.__config.monitoring_interval)
 
     async def fetch_urls(self, url_items):
         tasks = []
@@ -49,8 +50,9 @@ class WebMonitorApp:
                                        ) as resp:
                 if resp.status >= 400:
                     err_status = str(resp.status)
-                    self.logger.info(f"Cannot find {item['url']}: {err_status}")
-                
+                    self.logger.info(
+                        f"Cannot find {item['url']}: {err_status}")
+
                 web_content = await resp.text()
 
         except (aiohttp.ClientConnectorError, asyncio.TimeoutError) as error:
@@ -74,7 +76,7 @@ class WebMonitorApp:
 
             self.__publisher.send(msg)
             return msg
-        
+
     def find_txt_in_content(self, web_content, text_to_find):
         txt_matches = re.findall(
             text_to_find, web_content) if web_content is not None else ''

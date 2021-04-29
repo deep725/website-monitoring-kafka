@@ -2,8 +2,8 @@ import logging
 import json
 
 from confluent_kafka import Producer
-from functools import wraps
 from os import sys
+
 
 class KafkaPublisher:
     def __init__(self, config):
@@ -25,7 +25,7 @@ class KafkaPublisher:
             }
             conf_broker = {**conf_broker, **conf_sec}
 
-        return Producer(**conf_broker) 
+        return Producer(**conf_broker)
 
     def stop(self):
         sys.stderr.write('%% Waiting for %d deliveries\n' %
@@ -49,4 +49,3 @@ class KafkaPublisher:
             callback=self.delivery_callback
         )
         self.__producer.poll(0)
-
