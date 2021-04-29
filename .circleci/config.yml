@@ -28,12 +28,6 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
-      - save_cache:
-          paths:
-            - ".venv"
-            - "/usr/local/bin"
-            - "/usr/local/lib/python3.9/site-packages"
-          key: v2-dependencies-{{ checksum "requirements.txt" }}
 
       # Step 3: run linter and tests
       - run:
