@@ -2,6 +2,7 @@ import json
 
 import pytest
 from unittest import mock
+from unittest.mock import AsyncMock
 
 from src.consumer.kafka_consumer import KafkaConsumer
 
@@ -14,10 +15,8 @@ from src.consumer.kafka_consumer import KafkaConsumer
 @pytest.fixture
 @mock.patch('src.consumer.kafka_consumer.Consumer', autospec=True)
 async def kafka_consumer_obj(kafka_consumer_mock, cfg_read):
-    db_sink = mock.AsyncMock()
-    consumer_obj = None
-    with mock.patch('src.consumer.kafka_consumer.Consumer', autospec=True) as kafka_consumer_mock:
-        consumer_obj = KafkaConsumer(cfg_read, db_sink)
+    db_sink = AsyncMock()
+    consumer_obj = KafkaConsumer(cfg_read, db_sink)
     return kafka_consumer_mock, consumer_obj
 
 
