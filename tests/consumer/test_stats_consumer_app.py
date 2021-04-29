@@ -10,7 +10,6 @@ from src.consumer.stats_consumer_app import StatsConsumerApp
 def stats_consumer_app(db_mock, consumer_mock, cfg_read, mocker):
     return consumer_mock, StatsConsumerApp(cfg_read, db_mock)
 
-
 class TestStatsConsumerApp:
     @pytest.mark.asyncio
     async def test_consumer_start(self, stats_consumer_app, mocker):
