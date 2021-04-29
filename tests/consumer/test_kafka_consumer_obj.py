@@ -7,13 +7,13 @@ from src.consumer.kafka_consumer import KafkaConsumer
 
 
 # @pytest.fixture
-# @mock.patch('src.consumer.kafka_consumer.Consumer', autospec=True)
 # @mock.patch('src.consumer.pgsql_sink.PgSQLSink', autospec=True)
 # async def kafka_consumer_obj(db_mock, kafka_consumer_mock, cfg_read, mocker):
 #     return kafka_consumer_mock, KafkaConsumer(cfg_read, db_mock)
 
 @pytest.fixture
-async def kafka_consumer_obj(cfg_read, mocker):
+@mock.patch('src.consumer.kafka_consumer.Consumer', autospec=True)
+async def kafka_consumer_obj(kafka_consumer_mock, cfg_read):
     db_sink = mock.AsyncMock()
     consumer_obj = None
     with mock.patch('src.consumer.kafka_consumer.Consumer', autospec=True) as kafka_consumer_mock:
