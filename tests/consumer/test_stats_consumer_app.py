@@ -13,15 +13,15 @@ def stats_consumer_app(db_mock, consumer_mock, cfg_read, mocker):
 
 class TestStatsConsumerApp:
     @pytest.mark.asyncio
-    async def test_consumer_stop(self, stats_consumer_app, mocker):
-        consumer, app = stats_consumer_app
-
-        app.stop()
-        consumer.return_value.stop.assert_called_once()
-        
-    @pytest.mark.asyncio
     async def test_consumer_start(self, stats_consumer_app, mocker):
         consumer, app = stats_consumer_app
 
         await app.run()
         consumer.return_value.start.assert_called_once_with()
+
+    @pytest.mark.asyncio
+    async def test_consumer_stop(self, stats_consumer_app, mocker):
+        consumer, app = stats_consumer_app
+
+        app.stop()
+        consumer.return_value.stop.assert_called_once()
