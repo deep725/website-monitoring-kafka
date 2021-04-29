@@ -59,23 +59,25 @@ def stats_consumer_proc(config):
     db_sink.clean_up()
 
 
-def run_procs():
+def run_procs(procs):
     try:
-        processes = []
+        procs_list = []
 
-        for proc in (web_monitor_proc, stats_consumer_proc):
+        for proc in procs:
             process = multiprocessing.Process(target=proc,
                                               args=(config,))
-            processes.append(process)
+            procs_list.append(process)
             process.start()
 
-        for proc in processes:
+        for proc in procs_list:
             proc.join()
     except KeyboardInterrupt:
         pass
 
 
 if __name__ == "__main__":
+    procs = (web_monitor_proc, stats_consumer_proc)
+
     config = ConfigReader('config/config.json')
     # config = ConfigReader('config/config.local.json')
 
@@ -85,4 +87,4 @@ if __name__ == "__main__":
     # kafka_admin = KafkaAdmin()
     # kafka_admin.create_partitions( len(config.url_list), config.kafka_topic)
 
-    run_procs()
+    run_procs(procs)
