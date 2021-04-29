@@ -29,8 +29,7 @@ class TestKafkaConsumerObject:
     @pytest.mark.asyncio
     async def test_consumer_poll_msgs(self, kafka_consumer_obj, mocker):
         consumer, obj = kafka_consumer_obj
-        with mock.patch('src.consumer.kafka_consumer.Consumer.poll', autospec=True):
-            await obj.poll_msgs()
+        await obj.poll_msgs()
 
         consumer.poll.assert_called_once()
 
