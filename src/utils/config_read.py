@@ -19,6 +19,17 @@ class ReturnStatus(enum.Enum):
 
 class ConfigReader:
     def __init__(self, file):
+        """
+        Parameters
+        ----------
+        name : str
+            The name of the animal
+        sound : str
+            The sound the animal makes
+        num_legs : int, optional
+            The number of legs the animal (default is 4)
+        """
+        
         self.__config = {}
         self.__loglevel = None
         self.__kafka_topic = None
@@ -29,7 +40,7 @@ class ConfigReader:
     def file_read_status(self):
         return self.__file_read_status
 
-    def read_file(self, file):
+    def read_file(self, file):      
         ret_val = ReturnStatus.FAILURE
         self.logger = logging.getLogger(self.__class__.__name__)
         try:

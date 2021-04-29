@@ -37,11 +37,11 @@ class KafkaConsumer:
         return self.__consumer 
 
     def stop(self):
-        self.logger.debug("Stoping Consumer...")
+        self.logger.debug('Stoping Consumer...')
         self.__consumer.close()
 
     async def start(self):
-        self.logger.debug(f"Consuming on : {self.kafka_topic}")
+        self.logger.debug(f'Consuming on : {self.kafka_topic}')
         while True:
             try:
                 await self.poll_msgs()
@@ -60,8 +60,7 @@ class KafkaConsumer:
             self.logger.info(f'Consumer error: {msg.error()}')
             return None
 
-        str = msg.value().decode("utf-8")
-        data = json.loads(msg.value().decode("utf-8"))
+        data = json.loads(msg.value().decode('utf-8'))
         self.logger.info(f'Received message: {data}')
         await self.__db_sink.insert(data)
         return data

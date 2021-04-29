@@ -22,7 +22,7 @@ class PgSQLSink:
 
             self.conn.autocommit = True
             self.cursor = self.conn.cursor()
-            self.logger.debug("Opened database successfully")
+            self.logger.debug('Opened database successfully')
 
         except psycopg2.OperationalError as err:
             breakpoint()
@@ -56,11 +56,11 @@ class PgSQLSink:
 
             self.cursor.execute(sql_str, data_to_insert)
 
-            self.logger.debug("Record inserted successfully into mobile table")
+            self.logger.debug('Record inserted successfully into mobile table')
 
         except (Exception, psycopg2.Error) as error:
             breakpoint()
-            self.logger.error(f"Failed to insert record into {self.table} table: {error}")
+            self.logger.error(f'Failed to insert record into {self.table} table: {error}')
 
     def clean_up(self):
         if self.cursor:

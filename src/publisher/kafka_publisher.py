@@ -30,7 +30,7 @@ class KafkaPublisher:
     def stop(self):
         sys.stderr.write('%% Waiting for %d deliveries\n' %
                          len(self.__producer))
-        self.logger.debug("Stoping Publisher...")
+        self.logger.debug('Stoping Publisher...')
         self.__producer.flush()
 
     def delivery_callback(self, err, msg):
@@ -41,9 +41,7 @@ class KafkaPublisher:
                 f'Message delivered to {msg.topic()} [{msg.partition()}] @ offset {msg.offset()}')
 
     def send(self, data):
-        # self = cls()
-        logging.debug(f"Sending: {self.kafka_topic}")
-        # self.__producer.produce(self.kafka_topic, "hj", callback=self.delivery_callback)
+        logging.debug(f'Sending: {self.kafka_topic}')
         self.__producer.produce(
             self.kafka_topic,
             key=data['url'],

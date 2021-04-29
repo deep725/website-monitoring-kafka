@@ -54,11 +54,11 @@ class WebMonitorApp:
                 web_content = await resp.text()
 
         except (aiohttp.ClientConnectorError, asyncio.TimeoutError) as error:
-            err_status = "Connection Error"
+            err_status = 'Connection Error'
             self.logger.error(f'{err_status}: {item["url"]} {error}')
 
         except Exception as error:
-            err_status = "Unknown"
+            err_status = 'Unknown'
             self.logger.error(f'Exception thrown from {item["url"]}: {error}')
 
         finally:
