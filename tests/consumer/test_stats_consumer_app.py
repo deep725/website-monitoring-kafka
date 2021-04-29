@@ -6,9 +6,9 @@ from src.consumer.stats_consumer_app import StatsConsumerApp
 
 @pytest.fixture
 @mock.patch('src.consumer.stats_consumer_app.KafkaConsumer', autospec=True)
-def stats_consumer_app(consumer_mock, cfg_read, mocker):
-    db_sink = mocker.MagicMock()
-    return consumer_mock, StatsConsumerApp(cfg_read, db_sink)
+@mock.patch('src.consumer.pgsql_sink.PgSQLSink', autospec=True)
+def stats_consumer_app(db_mock, consumer_mock, cfg_read, mocker):
+    return consumer_mock, StatsConsumerApp(cfg_read, db_mock)
 
 
 class TestStatsConsumerApp:
