@@ -1,6 +1,6 @@
 import pytest
-from main.publisher.web_monitor_app import WebMonitorApp
-from main.publisher.kafka_publisher import KafkaPublisher
+from src.publisher.web_monitor_app import WebMonitorApp
+from src.publisher.kafka_publisher import KafkaPublisher
 import asyncio, aiohttp
 from aioresponses import aioresponses
 

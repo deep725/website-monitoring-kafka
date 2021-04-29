@@ -2,8 +2,8 @@ import pytest
 from unittest.mock import AsyncMock
 from confluent_kafka import Consumer
 
-from main.consumer.stats_consumer_app import StatsConsumerApp
-from main.consumer.kafka_consumer import KafkaConsumer
+from src.consumer.stats_consumer_app import StatsConsumerApp
+from src.consumer.kafka_consumer import KafkaConsumer
  
 @pytest.fixture
 def stats_consumer_app(cfg_read, mocker):

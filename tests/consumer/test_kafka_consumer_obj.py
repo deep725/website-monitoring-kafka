@@ -4,12 +4,12 @@ import pytest
 from unittest.mock import AsyncMock
 from unittest import mock
 
-from main.consumer.kafka_consumer import KafkaConsumer
+from src.consumer.kafka_consumer import KafkaConsumer
 from confluent_kafka import Consumer
 
 
 @pytest.fixture
-@mock.patch('main.consumer.kafka_consumer.Consumer', autospec=True)
+@mock.patch('src.consumer.kafka_consumer.Consumer', autospec=True)
 def kafka_consumer_obj(kafka_consumer_mock, cfg_read, mocker):
     db_sink = AsyncMock()
     return kafka_consumer_mock, KafkaConsumer(cfg_read, db_sink)
@@ -18,7 +18,7 @@ def kafka_consumer_obj(kafka_consumer_mock, cfg_read, mocker):
 class TestKafkaConsumerObject:
     def test_consumer_create_obj(self, cfg_read, mocker):
         db_sink = mocker.MagicMock()
-        with mock.patch('main.consumer.kafka_consumer.Consumer', autospec=True) as kafka_consumer_mock:
+        with mock.patch('src.consumer.kafka_consumer.Consumer', autospec=True) as kafka_consumer_mock:
             consumer_obj = KafkaConsumer(cfg_read, db_sink)
 
             assert kafka_consumer_mock.return_value == consumer_obj.get_consumer()
@@ -31,7 +31,7 @@ class TestKafkaConsumerObject:
     @pytest.mark.asyncio
     async def test_consumer_poll_msgs(self, kafka_consumer_obj, mocker):
         consumer, obj = kafka_consumer_obj
-        with mock.patch('main.consumer.kafka_consumer.Consumer.poll', autospec=True):
+        with mock.patch('src.consumer.kafka_consumer.Consumer.poll', autospec=True):
             await obj.poll_msgs()
 
         consumer.poll.assert_called_once()

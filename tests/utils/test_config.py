@@ -7,7 +7,7 @@ in future if required.
 from sys import modules
 import pytest
 
-from main.utils.config_read import ConfigReader, ReturnStatus
+from src.utils.config_read import ConfigReader, ReturnStatus
 
 class TestConfigReader:
     def test_non_existent_file_read(self, capsys):

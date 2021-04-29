@@ -2,10 +2,10 @@ import psycopg2
 import pytest
 from unittest import mock
 
-from main.consumer.pgsql_sink import PgSQLSink
+from src.consumer.pgsql_sink import PgSQLSink
 
 @pytest.fixture
-@mock.patch('main.consumer.pgsql_sink.psycopg2', autospec=True)
+@mock.patch('src.consumer.pgsql_sink.psycopg2', autospec=True)
 def create_db_mock(psql_mock, cfg_read):
     return psql_mock, PgSQLSink(cfg_read)
 

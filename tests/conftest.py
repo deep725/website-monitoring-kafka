@@ -1,6 +1,6 @@
 import pytest
-from main.utils import ConfigReader
-from main.publisher import WebMonitorApp
+from src.utils import ConfigReader
+from src.publisher import WebMonitorApp
 
 @pytest.fixture(scope="session")
 def cfg_read():
