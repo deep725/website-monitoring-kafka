@@ -1,10 +1,8 @@
-
-
 from unittest import mock
 from src.runner import Runner
 
 
-class TestMain:
+class TestRunner:
     @mock.patch('src.runner.WebMonitorApp', autospec=True)
     @mock.patch('src.runner.asyncio', autospec=True)
     def test_web_monitor_proc(self, asyncio_mock, web_monitor_app_mock, cfg_read):

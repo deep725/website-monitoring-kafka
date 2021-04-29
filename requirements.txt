@@ -1,8 +1,9 @@
-pytest==6.2.3
-aiohttp==3.7.4.post0
-aioresponses==0.7.2
-confluent_kafka==1.6.1
-psycopg2==2.8.6
+pytest
+pytest-asyncio
+aiohttp
+aioresponses
+confluent_kafka
+psycopg2-binary
 flake8 
 pytest-cov
 pytest-mock

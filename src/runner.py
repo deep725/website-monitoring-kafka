@@ -3,7 +3,6 @@ from .publisher import WebMonitorApp
 import asyncio
 import logging
 import multiprocessing
-print("In module products __package__, __name__ ==", __package__, __name__)
 
 
 class Runner:

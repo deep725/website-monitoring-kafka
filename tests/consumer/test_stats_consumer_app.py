@@ -1,18 +1,14 @@
 import pytest
-from unittest.mock import AsyncMock
+from unittest import mock
 
 from src.consumer.stats_consumer_app import StatsConsumerApp
-from src.consumer.kafka_consumer import KafkaConsumer
 
 
 @pytest.fixture
-def stats_consumer_app(cfg_read, mocker):
-
+@mock.patch('src.consumer.stats_consumer_app.KafkaConsumer', autospec=True)
+def stats_consumer_app(consumer_mock, cfg_read, mocker):
     db_sink = mocker.MagicMock()
-    consumer = mocker.MagicMock()
-    mocker.patch.object(KafkaConsumer, "create_consumer", side_effect=consumer)
-
-    return consumer, StatsConsumerApp(cfg_read, db_sink)
+    return consumer_mock, StatsConsumerApp(cfg_read, db_sink)
 
 
 class TestStatsConsumerApp:
@@ -20,20 +16,12 @@ class TestStatsConsumerApp:
     async def test_consumer_start(self, stats_consumer_app, mocker):
         consumer, app = stats_consumer_app
 
-        consumer.consumer_start = AsyncMock(name="start", return_value=None)
-        mocker.patch.object(KafkaConsumer, "start",
-                            side_effect=consumer.consumer_start)
-
         await app.run()
-        consumer.consumer_start.assert_called_once()
+        consumer.return_value.start.assert_called_once_with()
 
     @pytest.mark.asyncio
     async def test_consumer_stop(self, stats_consumer_app, mocker):
         consumer, app = stats_consumer_app
 
-        consumer.consumer_stop = mocker.MagicMock(
-            name="stop", return_value=None)
-        mocker.patch.object(KafkaConsumer, "stop",
-                            side_effect=consumer.consumer_stop)
         app.stop()
-        consumer.consumer_stop.assert_called_once()
+        consumer.return_value.stop.assert_called_once()
